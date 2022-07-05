@@ -13,7 +13,7 @@ class Marine{
   Marine();
   Marine(int x, int y);
   Marine(int x, int y, int default_damage);
-  ~Marine() { total_amrine_num--; }
+  ~Marine() { total_marine_num--; }
   
   int Attack();
   void BeAttacked(int damage_earn);
