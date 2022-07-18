@@ -7,6 +7,7 @@ class MyString{
   int memory_capacity;
   
  public:
+  explicit MyString(int capacity);
   MyString(char c);
   MyString(const char* str);
   MyString(const MyString& str);
@@ -78,13 +79,13 @@ MyString& MyString::assign(const MyString& str){
   if(str.string_length>memory_capacity){
     delete[] string_content;
     
-    string_content-new char[str.string_length];
-    memory_capacity-str.string_length;
+    string_content=new char[str.string_length];
+    memory_capacity=str.string_length;
   }
   for(int i=0; i!=str.string_length; i++)
     string_content[i]=str.string_content[i];
   
-  string_length-str.string_length;
+  string_length=str.string_length;
   return *this;
 }
 MyString& MyString::assign(const char* str){
