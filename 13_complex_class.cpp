@@ -24,10 +24,23 @@ class Complex{
   
   Complex& operator=(const Complex &c);
 
+  friend Complex operator+(const Complex &a, const Complex &b);
+  friend std::ostream& operator<<(std::ostream &os, const Complex &c);
+
   void println(){
     std::cout << "( " << real << " , " << img << " ) " << std::endl;
   }
 };
+std::ostream& operator<<(std::ostream &os, const Complex &c){
+  os << "( " << c.real << " , " << c.img << " ) ";
+  return os;
+}
+Complex operator+(const Complex &a, const Complex &b){
+  // friend 사용하지 않는 경우
+  // Complex temp(a); return temp.operator+(b);
+  Complex temp(a.real+b.real, a.img+b.img);
+  return temp;
+}
 Complex::Complex(const char *str){
   int begin=0, end=strlen(str);
   img=0.0;
@@ -127,8 +140,5 @@ int main(){
   a.println();
   a=a-"1.2 -i1.823";
   a.println();
-  a=a*"2.3+i22";
-  a.println();
-  a=a/"-12+i55";
-  a.println();
+  std::cout << "a의 값은: " << a << " 이다." << std::endl;
 }
