@@ -74,7 +74,7 @@ class Array{
 
       return false;
     }
-    Int operator*();
+    Int operator*(); // 이게 문제인듯..?
   };
 
   friend Iterator;
