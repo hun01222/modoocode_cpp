@@ -28,7 +28,7 @@ class Array{
     Iterator(Array *arr, int *loc=NULL) : arr(arr){
       location=new int[arr->dim];
       for(int i=0; i!=arr->dim; i++)
-      location[i]=(loc!=NULL ? loc[i] : 0);
+        location[i]=(loc!=NULL ? loc[i] : 0);
     }
     Iterator(const Iterator &itr) : arr(itr.arr){
       location=new int[arr->dim];
@@ -103,7 +103,7 @@ class Array{
       return;
     }
     current->next=new Address[size[current->level]];
-    for(int i=0; i!=size[current->next]+i; i++){
+    for(int i=0; i!=size[current->level]; i++){
       (static_cast<Address*>(current->next)+i)->level=current->level+1;
       initialize_address(static_cast<Address*>(current->next)+i);
     }
@@ -113,7 +113,7 @@ class Array{
     for(int i=0; current->level<dim-1 && i<size[current->level]; i++)
       delete_address(static_cast<Address*>(current->next)+i);
    
-   delete[] current->next;
+    delete[] current->next;
   }
   Int operator[](const int index);
   ~Array(){
@@ -151,7 +151,54 @@ class Int{
  public:
   Int(int index, int _level=0, void *_data=NULL, Array *_array=NULL)
     : level(_level), data(_data), array(_array){
-      
+      if(_level<1 || index>=array->size[_level-1]){
+        data=NULL;
+        return;
+      }
+      if(level==array->dim){
+        data=static_cast<void*>((
+          static_cast<int*>(static_cast<Array::Address*>(data)->next)+index));
+      }else{
+        data=static_cast<void*>(static_cast<Array::Address*>(
+          static_cast<Array::Address*>(data)->next)+index);
+      }
+    };
+
+    Int(const Int &i) : data(i.data), level(i.level), array(i.array) {}
+
+    operator int(){
+      if(data) return *static_cast<int*>(data);
+      return 0;
     }
-}
+    Int& operator=(const int &a){
+      if(data) *static_cast<int*>(data)=a;
+      return *this;
+    }
+
+    Int operator[](const int index){
+      if(!data) return 0;
+      return Int(index, level+1, data, array);
+    }
+};
+} // namespace MyArray
+
+int main(){
+  int size[]={2, 3, 4};
+  MyArray::Array arr(3, size);
+
+  MyArray::Array::Iterator itr=arr.begin();
+  for(int i=0; itr!=arr.end(); itr++, i++) (*itr)=i;
+  for(itr=arr.begin(); itr!=arr.end(); itr++)
+    std::cout << *itr << std::endl;
+  
+  for(int i=0; i<2; i++)
+    for(int j=0; j<3; j++)
+      for(int k=0; k<4; k++)
+        arr[i][j][k]=(i+1)*(j+1)*(k+1)+arr[i][j][k];
+  for(int i=0; i<2; i++)
+    for(int j=0; j<3; j++)
+      for(int k=0; k<4; k++){
+        std::cout << i << ' ' << j << ' ' << k << ' ' << arr[i][j][k]
+          << std::endl;
+      }
 }
