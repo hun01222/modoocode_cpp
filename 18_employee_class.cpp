@@ -22,11 +22,11 @@ class Employee{
 
   Employee() {}
 
-  void print_info(){
+  virtual void print_info(){
     std::cout << name << " (" << position << " , " << age << ") ==> "
       << calculate_pay() << "만원" << std::endl;
   }
-  int calculate_pay() {return 200+rank*50;}
+  virtual int calculate_pay() {return 200+rank*50;}
 };
 
 class Manager : public Employee{
@@ -70,7 +70,7 @@ class EmployeeList{
 
   void print_employee_info(){
     int total_pay=0;
-    for(int i=0; i<current_employee; i++){
+    for(int i=0; i<current_employee; i++){ // polymorphism
       employee_list[i]->print_info();
       total_pay+=employee_list[i]->calculate_pay();
     }
