@@ -14,20 +14,17 @@ class Derived : public Base{
   std::string child_string;
 
  public:
-  Derived() : Base(), child_string("파생"){
-    std::cout << "파생 클래스" << std::endl;
-
-    what();
-  }
+  Derived() : Base(), child_string("파생"){std::cout << "파생 클래스" << std::endl;}
 
   void what() {std::cout << child_string << std::endl;}
 };
 int main(){
-  std::cout << " === 기반 클래스 생성 === " << std::endl;
   Base p;
-
-  std::cout << " === 파생 클래스 생성 === " << std::endl;
   Derived c;
+  
+  std::cout << "=== 포인터 버전 ===" << std::endl;
+  Base *p_c=&c; // 업케스팅
+  p_c->what();
 
   return 0;
 }
