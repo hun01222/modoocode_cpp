@@ -17,6 +17,7 @@ class Vector{
   int size();
   ~Vector();
 };
+
 class Stack{
   struct Node{
     Node *prev;
@@ -36,6 +37,7 @@ class Stack{
   bool is_empty();
   ~Stack();
 };
+
 class NumStack{
   struct Node{
     Node *prev;
@@ -56,19 +58,61 @@ class NumStack{
 
   ~NumStack();
 };
-class Table; class Cell{ // cpp로 컴파일 하면 필요 없을 듯?
+
+class Table; class Cell{ // cpp로 컴파일하면 필요없을 듯?
  protected:
   int x, y;
   Table *table;
 
+ public:
+  virtual std::string stringify()=0;
+  virtual int to_numeric()=0;
+
+  Cell(int x, int y, Table *table);
+};
+class StringCell : public Cell{
   std::string data;
 
  public:
-  virtual std::string stringify();
-  virtual int to_numeric();
+  std::string stringify();
+  int to_numeric();
 
-  Cell(std::string data, int x, int y, Table *table);
+  StringCell(std::string data, int x, int y, Table *t);
 };
+class NumberCell : public Cell{
+  int data;
+
+ public:
+  std::string stringify();
+  int to_numeric();
+
+  NumberCell(int data, int x, int y, Table *t);
+};
+class DataCell : public Cell{
+  time_t data;
+
+ public:
+  std::string stringify();
+  int to_numeric();
+
+  DataCell(std::string s, int x, int y, Table *t);
+};
+class ExprCell : public Cell{
+  std::string data;
+  std::string *parsed_expr;
+
+  Vector exp_vec;
+
+  int precedence(char c);
+  void parse_expression();
+
+ public:
+  ExprCell(std::string data, int x, int y, Table *t);
+
+  std::string stringify();
+  int to_numeric();
+};
+
 class Table{
  protected:
   int max_row_size, max_col_size;

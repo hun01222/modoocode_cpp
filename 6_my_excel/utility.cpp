@@ -2,6 +2,7 @@
 
 #include<iostream>
 #include<fstream>
+#include<ctime>
 
 namespace MyExcel{
 Vector::Vector(int n) : data(new std::string[n]), capacity(n), length(0) {}
@@ -85,10 +86,75 @@ NumStack::~NumStack(){
   }
 }
 
-Cell::Cell(std::string data, int x, int y, Table *table)
-  : data(data), x(x), y(y), table(table) {}
-std::string Cell::stringify() {return data;}
-int Cell::to_numeric() {return 0;}
+Cell::Cell(int x, int y, Table *table) : x(x), y(y), table(table) {}
+StringCell::StringCell(std::string data, int x, int y, Table *t)
+  : data(data), Cell(x, y, t) {}
+std::string StringCell::stringify() {return data;}
+int StringCell::to_numeric() {return 0;}
+
+NumberCell::NumberCell(int data, int x, int y, Table *t)
+  : data(data), Cell(x, y, t) {}
+std::string NumberCell::stringify() {return std::to_string(data);}
+int NumberCell::to_numeric() {return data;}
+
+std::string DataCell::stringify(){
+  char buf[50];
+  tm temp;
+  localtime(&temp, &data);
+  
+  strftime(buf, 50, "%F", &temp);
+
+  return std::string(buf);
+}
+int DataCell::to_numeric() {return static_cast<int>(data);}
+DataCell::DataCell(std::string s, int x, int y, Table *t) : Cell(x, y, t){
+  int year=atoi(s.c_str());
+  int month=atoi(s.c_str() + 5);
+  int day=atoi(s.c_str() + 8);
+
+  tm timeinfo;
+
+  timeinfo.tm_year= year - 1900;
+  timeinfo.tm_mon= month - 1;
+  timeinfo.tm_mday= day;
+  timeinfo.tm_hour= 0;
+  timeinfo.tm_min= 0;
+  timeinfo.tm_sec= 0;
+
+  data=mktime(&timeinfo);
+}
+int ExprCell::to_numeric(){
+  double result=0;
+  NumStack stack;
+
+  for(int i=0; i<exp_vec.size(); i++){
+    std::string s=exp_vec[i];
+
+    if(isalpha(s[0])){
+      stack.push(table->to_numeric(s));
+    }else if(isdigit(s[0])){
+      stack.push(atoi(s.c_str()));
+    }else{
+      double y=stack.pop();
+      double x=stack.pop();
+      switch(s[0]){
+        case '+':
+          stack.push(x + y);
+          break;
+        case '-':
+          stack.push(x - y);
+          break;
+        case '*':
+          stack.push(x*y);
+          break;
+        case '/':
+          stack.push(x/y);
+          break;
+      }
+    }
+  }
+  return stack.pop();
+}
 
 Table::Table(int max_row_size, int max_col_size)
   : max_row_size(max_row_size), max_col_size(max_col_size){
@@ -98,7 +164,7 @@ Table::Table(int max_row_size, int max_col_size)
     for(int j=0; j<max_col_size; j++)
       data_table[i][j]=NULL;
   }
-  }
+}
 Table::~Table(){
   for(int i=0; i<max_row_size; i++)
     for(int j=0; j<max_col_size; j++)
@@ -268,19 +334,19 @@ int main(){
   MyExcel::CSVTable table1(5, 5);
   std::ofstream out1("test.csv");
 
-  table.reg_cell(new MyExcel::Cell("Hello~", 0, 0, &table1), 0, 0);
-  table.reg_cell(new MyExcel::Cell("C++", 0, 1, &table1), 0, 1);
+  table1.reg_cell(new MyExcel::Cell("Hello~", 0, 0, &table1), 0, 0);
+  table1.reg_cell(new MyExcel::Cell("C++", 0, 1, &table1), 0, 1);
 
-  table.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table1), 1, 1);
+  table1.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table1), 1, 1);
   out1 << table1;
 
 
   MyExcel::HtmlTable table2(5, 5);
   std::ofstream out2("test.html");
 
-  table.reg_cell(new MyExcel::Cell("Hello~", 0, 0, &table2), 0, 0);
-  table.reg_cell(new MyExcel::Cell("C++", 0, 1, &table2), 0, 1);
+  table2.reg_cell(new MyExcel::Cell("Hello~", 0, 0, &table2), 0, 0);
+  table2.reg_cell(new MyExcel::Cell("C++", 0, 1, &table2), 0, 1);
 
-  table.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table2), 1, 1);
+  table2.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table2), 1, 1);
   out2 << table2;
 }
