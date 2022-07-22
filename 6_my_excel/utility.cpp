@@ -212,6 +212,45 @@ std::string TxtTable::col_num_to_str(int n){
   }
   return s;
 }
+
+HtmlTable::HtmlTable(int row, int col) : Table(row, col) {}
+std::string HtmlTable::print_table(){
+  std::string s="<table border='1' cellpadding='10'>";
+  for(int i=0; i<max_row_size; i++){
+    s+="<tr>";
+    for(int j=0; j<max_col_size; j++){
+      s+="<td>";
+      if(data_table[i][j]) s+=data_table[i][j]->stringify();
+      s+="</td>";
+    }
+    s+="</tr>";
+  }
+  s+="</table>";
+  return s;
+};
+
+CSVTable::CSVTable(int row, int col) : Table(row, col) {}
+std::string CSVTable::print_table(){
+  std::string s="";
+  for(int i=0; i<max_row_size; i++){
+    for(int j=0; j<max_col_size; j++){
+      if(j>=1) s+=",";
+      std::string temp;
+      if(data_table[i][j]) temp=data_table[i][j]->stringify();
+
+      for(int k=0; k<temp.length(); k++){
+        if(temp[k]=='"'){
+          temp.insert(k, 1, '"');
+          k++;
+        }
+      }
+      temp= '"' + temp + '"';
+      s+=temp;
+    }
+    s+="\n";
+  }
+  return s;
+}
 }
 
 int main(){
@@ -224,4 +263,24 @@ int main(){
   table.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table), 1, 1);
   std::cout << std::endl << table;
   out << table;
+
+
+  MyExcel::CSVTable table1(5, 5);
+  std::ofstream out1("test.csv");
+
+  table.reg_cell(new MyExcel::Cell("Hello~", 0, 0, &table1), 0, 0);
+  table.reg_cell(new MyExcel::Cell("C++", 0, 1, &table1), 0, 1);
+
+  table.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table1), 1, 1);
+  out1 << table1;
+
+
+  MyExcel::HtmlTable table2(5, 5);
+  std::ofstream out2("test.html");
+
+  table.reg_cell(new MyExcel::Cell("Hello~", 0, 0, &table2), 0, 0);
+  table.reg_cell(new MyExcel::Cell("C++", 0, 1, &table2), 0, 1);
+
+  table.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table2), 1, 1);
+  out2 << table2;
 }
