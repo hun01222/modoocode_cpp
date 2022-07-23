@@ -1,8 +1,8 @@
 #include<iostream>
 template <int N>
 struct Factorial{
+  // 내부 계산 결과를 value로 반환
   static const int result=N*Factorial<N-1>::result;
-};
 
 template <>
 struct Factorial<1>{
