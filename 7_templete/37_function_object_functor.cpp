@@ -60,6 +60,8 @@ void bubble_sort(Cont &cont, Comp &comp){
       if(!comp(cont[i], cont[j]))
         cont.swap(i, j);
 }
+
+// 함수는 아니지만 함수인 척 하는 객체를 함수객체(Functor)라고 한다. 
 struct Comp1{
   bool operator()(int a, int b) {return a>b;}
 };

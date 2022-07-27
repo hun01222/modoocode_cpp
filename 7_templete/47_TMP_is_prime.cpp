@@ -31,6 +31,7 @@ struct _is_prime{
   static const bool result=!check_div<N, two>::result;
 };
 
+// 의존타입: 컴파일 전까진 어떤 타입인지 알 수 없음
 template <>
 struct _is_prime<two>{
   static const bool result=true;
