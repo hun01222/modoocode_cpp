@@ -30,7 +30,9 @@ int main() {
 
   // [capture list] (받는 인자) -> 리턴 타입 {함수 본체}
   // [] : 아무것도 캡쳐 안함
-  // [&a, b]: a는 래퍼런스로 캡쳐, b는 (변경 불가능한) 복사본으로 캡쳐
+  // [&a, b] : a는 래퍼런스로 캡쳐, b는 (변경 불가능한) 복사본으로 캡쳐
+  // [&] : 외부의 모든 변수들을 레퍼런스로 캡쳐
+  // [=] : 외부의 모든 변수들을 복사본으로 캡쳐
   vec.erase(std::remove_if(vec.begin(), vec.end(),
                           [&num_erased](int i) -> bool {
                             if (num_erased >= 2){
