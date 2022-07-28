@@ -1,5 +1,6 @@
 #include<iostream>
 
+// new 는 생성자를 호출한다 cf) malloc 은 그렇지 않다.
 void Code1(){
 	int* p=new int;
 	*p=10;
