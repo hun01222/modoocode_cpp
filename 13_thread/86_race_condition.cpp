@@ -15,6 +15,7 @@ int main() {
   // & 과 다르게 타입만 같다면 참조대상을 바꿀 수 있다
   std::vector<std::thread> workers;
   for (int i = 0; i < 4; i++)
+    // std::thread 는 std::ref(counter) 를 input 으로 하는 worker function 할당한다.
     workers.push_back(std::thread(worker, std::ref(counter)));
   
   for (int i = 0; i < 4; i++)
