@@ -29,7 +29,7 @@ int main() {
 
   try {
     data = vec.at(index);
-  } catch (std::out_of_range& e){
+  } catch (std::out_of_range& e) {
     std::cout << "예외 발생 ! " << e.what() << std::endl;
   }
 
