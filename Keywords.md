@@ -129,4 +129,5 @@ delete p;
 
 ### 대입 연산자 함수
 
- - `C operator=(const C& c) {}`
+- `C operator=(const C& c) {}`
+- 디폴트 복사 생성자 처럼 디폴트 대입 연산자도 존재한다
