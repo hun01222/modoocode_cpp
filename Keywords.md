@@ -60,27 +60,27 @@ delete p;
 ### constructor
 
 - 객체 생성시 자동으로 호출되는 함수
-	`con(int a, int b, int c);`
+	`Con(int a, int b, int c);`
 - 생성자도 오버로딩이 가능하다
 
 #### default constructor
 
 - 인자를 하나도 가지지 않는 생성자
-  `con();`
+  `Con();`
 - 명시적으로 사용
   `con() = default;`
   
 ### destructor
 
 - 객체 소멸시 자동으로 호출되는 함수
-  `~con()`
+  `~Con()`
 - 메모리 누수 : 메모리를 해재해 주지 않으면 발생
 - default 소멸자도 존재한다
 
 ### copy constructor
 
 - 동일한 객체 하나로 나머지 객체를 복사 생성
-  `con(const con& c);`
+  `Con(const con& c);`
 - 함수 내부에서 받은 인자의 값을 변화시키는 일이 없다면 const 를 붙혀주는 것이 바람직하다.
 
 #### default copy constructor
@@ -92,7 +92,7 @@ delete p;
 ### initializer list
 
 - 생성자 호출과 동시에 멤버 변수들을 초기화
-  `con(int a, int b) : a_(a), b_(b), c(0), d(false) {}`
+  `Con(int a, int b) : a_(a), b_(b), c(0), d(false) {}`
 - 초기화 리스트를 사용하지 않으면 생성을 먼저 하고  그 다음에 대입 수행
 - 상수와 레퍼런스들은 모두 생성과 동시에 초기화 되어야 하므로 초기화 리스트가 필요하다.
 
@@ -100,3 +100,33 @@ delete p;
 
 - 클래스 자체에만 종속되는 변수
 - static 함수 또한 클래스 자체에 종속되는 함수
+
+### this
+
+- 객체 자신을 가리키는 포인터
+
+### const 함수
+
+- 다른 변수의 값을 바꾸지 않는 함수
+  `Con() const {}`
+
+### explicit
+
+- 암시적 변환 : 타입이 다르면 적절히 다른 타입으로 변환하여 컴파일 한다.
+- explicit 키워드 사용하면 원하지 않는 암시적 변환을 할 수 없도록 컴파일러에 명시한다.
+  `explicit Con() {}`
+- explicit 키워드는 또한 해당 생성자가 복사 생성자의 형태로도 호출되는 것을 막게 한다.
+
+### mutable
+
+- const 함수 안에서 해당 멤버 변수에 const 가 아닌 작업을 할 수 있게 만들어준다.
+  `mutable A a;`
+
+## Overloading
+
+- 오버로딩 : 기본 연산자들을 직접 사용자가 정의하는 것
+- ::(범위 지정), .(멤버 지정), .&#42;(멤버 포인터로 멤버 지정) 을 제외한 모든 연산자를 사용할 수 있다.
+
+### 대입 연산자 함수
+
+ - `C operator=(const C& c) {}`
