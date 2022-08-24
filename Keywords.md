@@ -131,3 +131,37 @@ delete p;
 
 - `C operator=(const C& c) {}`
 - 디폴트 복사 생성자 처럼 디폴트 대입 연산자도 존재한다
+
+### friend
+
+- friend 키워드를 사용하면 private 이냐 public 이냐에 관계 없이 내부 정보에 접근할 수 있다.
+  `friend C operator+(const C& a, const C& b) {}`
+- 함수 뿐만 아니라 다른 클래스 자체도 friend 로 지정할 수 있다.
+  ```cpp
+  class A {
+   private:
+    friend B;
+  }```
+
+### Wrapper 클래스
+
+- 기본 자료형들을 클래스로 포장하여 각각의 자료형을 객체로 사용하는 것
+  - 타입 변환 연산자
+  `operator int()`
+  
+### c++ 스타일의 캐스팅
+
+- 종류
+  - static_cast : 일반적인 타입 변환
+  - const_cast : 객체의 상수성을 없애는 타입 변환. const int 가 int 로 바뀐다.
+  - dynamic_cast : 파생 클래스 사이에서의 다운 캐스팅
+  - reinterpret_cast : 위험을 감수하고 하는 캐스팅으로 서로 관련이 없는 포인터들 사이의 캐스팅 등
+- `static_cast<int>(float_variable)` 은 c언어 에서의 `(int)(float_veriable)` 과 동일한 문장이다.
+
+- A** 타입은 A* 객체를 배열로 사용하는 경우 사용할 수 있다.
+
+## Inheritance
+
+- 상속 : 다른 클래스의 내용을 그대로 포함할 수 있게 한다.
+- c++ 의 경우 여러 명의 부모를 가질 수 있기에 부모, 자식 클래스보다 기반, 파생 클래스라고 부르는 것이 낫다.
+- 오버라이딩(overriding) : 같은 이름의 함수라도 다른 클래스에 정의되어 있으면 다른 함수로 취급된다.
